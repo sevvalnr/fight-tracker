@@ -166,3 +166,130 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(` Server running on port ${PORT}`);
 });
+app.patch('/fights/:id', authenticateToken, async (req, res) => {
+  try {
+    const fightId = Number(req.params.id);
+    const user_id = req.user.id;
+    const { fight_date, opponent_name, fight_type, notes } = req.body;
+
+    const fields = [];
+    const values = [];
+    let idx = 1;
+
+    if (fight_date !== undefined) { fields.push(`fight_date = $${idx++}`); values.push(fight_date); }
+    if (opponent_name !== undefined) { fields.push(`opponent_name = $${idx++}`); values.push(opponent_name); }
+    if (fight_type !== undefined) { fields.push(`fight_type = $${idx++}`); values.push(fight_type); }
+    if (notes !== undefined) { fields.push(`notes = $${idx++}`); values.push(notes); }
+
+    if (fields.length === 0) {
+      return res.status(400).json({ error: 'Güncellenecek en az bir alan gönderin' });
+    }
+
+    const query = `
+      UPDATE fight_logs
+         SET ${fields.join(', ')}
+       WHERE id = $${idx} AND user_id = $${idx + 1}
+       RETURNING *;
+    `;
+    values.push(fightId, user_id);
+
+    const result = await pool.query(query, values);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Kayıt bulunamadı veya yetkiniz yok' });
+    }
+
+    res.json({ message: 'Fight log güncellendi', fight: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+app.delete('/fights/:id', authenticateToken, async (req, res) => {
+  try {
+    const fightId = Number(req.params.id);
+    const user_id = req.user.id;
+
+    const result = await pool.query(
+      `DELETE FROM fight_logs WHERE id = $1 AND user_id = $2 RETURNING id;`,
+      [fightId, user_id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Kayıt bulunamadı veya yetkiniz yok' });
+    }
+
+    res.json({ message: 'Fight log silindi' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+// GET /fights?q=ali&from=2025-01-01&to=2025-12-31&type=Sparring&limit=20&offset=0
+app.get('/fights', authenticateToken, async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const {
+      q,          // opponent_name veya notes içinde arama (case-insensitive)
+      from,       // ISO/tarih (>=)
+      to,         // ISO/tarih (<=)
+      type,       // fight_type eşitlik
+      limit = 50, // default 50 (maks 100)
+      offset = 0  // default 0
+    } = req.query;
+
+    const where = ['user_id = $1'];
+    const params = [user_id];
+    let i = 2;
+
+    if (type) {
+      where.push(`fight_type = $${i++}`);
+      params.push(String(type));
+    }
+
+    if (q) {
+      where.push(`(LOWER(opponent_name) LIKE LOWER($${i}) OR LOWER(notes) LIKE LOWER($${i}))`);
+      params.push(`%${String(q).trim()}%`);
+      i++;
+    }
+
+    if (from) {
+      where.push(`fight_date >= $${i++}`);
+      params.push(new Date(String(from)));
+    }
+    if (to) {
+      where.push(`fight_date <= $${i++}`);
+      params.push(new Date(String(to)));
+    }
+
+    // limit/offset koruması
+    const take = Math.min(Number(limit) || 50, 100);
+    const skip = Math.max(Number(offset) || 0, 0);
+
+    const baseWhere = where.length ? `WHERE ${where.join(' AND ')}` : '';
+
+    // total count (UI’da sayfalama göstermek istersen)
+    const countSql = `SELECT COUNT(*)::int AS total FROM fight_logs ${baseWhere};`;
+    const dataSql  = `
+      SELECT id, user_id, fight_date, opponent_name, fight_type, notes
+      FROM fight_logs
+      ${baseWhere}
+      ORDER BY fight_date DESC
+      LIMIT ${take} OFFSET ${skip};
+    `;
+
+    const [countRes, dataRes] = await Promise.all([
+      pool.query(countSql, params),
+      pool.query(dataSql, params)
+    ]);
+
+    res.json({
+      total: countRes.rows[0].total,
+      limit: take,
+      offset: skip,
+      fights: dataRes.rows
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});

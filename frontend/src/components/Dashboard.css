@@ -296,3 +296,104 @@
     grid-template-columns: 1fr;
   }
 }
+/* === Fight Card Buttons === */
+.fight-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.fight-card-actions button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* ✏️ Edit */
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+.btn-secondary:hover {
+  background-color: #e4e4e4;
+  transform: translateY(-1px);
+}
+
+/* 🗑️ Delete */
+.btn-danger {
+  background-color: #ff4d4d;
+  color: white;
+}
+.btn-danger:hover {
+  background-color: #e60000;
+  transform: translateY(-1px);
+}
+
+/* 💾 Save (edit modunda kullanılıyor) */
+.btn-submit {
+  background-color: #007bff;
+  color: white;
+}
+.btn-submit:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+/* ⚙️ Cancel (edit modunda kullanılıyor) */
+.btn-cancel,
+.btn-secondary-cancel {
+  background-color: #cccccc;
+  color: #222;
+}
+.btn-cancel:hover,
+.btn-secondary-cancel:hover {
+  background-color: #b3b3b3;
+  transform: translateY(-1px);
+}
+
+/* Edit form buton düzeni */
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.fight-card {
+  transition: all 0.2s ease-in-out;
+}
+.fight-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+/* === Cancel Button === */
+.btn-cancel {
+  background-color: #6c757d; /* Gri ton */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Eğer Cancel edit formunda yan yana ise */
+.edit-actions .btn-cancel {
+  background-color: #bbb;
+  color: #222;
+}
+
+.edit-actions .btn-cancel:hover {
+  background-color: #999;
+  transform: translateY(-1px);
+}

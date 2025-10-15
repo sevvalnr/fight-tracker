@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
+import Homepage from './components/Homepage';
 import './App.css';
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
             path="/dashboard"
             element={token ? <Dashboard token={token} onLogout={handleLogout} /> : <Navigate to="/login" />}
           />
-          <Route path="/" element={<Navigate to={token ? "/dashboard" : "/login"} />} />
+          <Route path="/" element={<Homepage token={token} onLogout={handleLogout} />} />
         </Routes>
       </div>
     </Router>
