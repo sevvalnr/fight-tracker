@@ -1,0 +1,87 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+```
+
+---
+
+## 📁 Frontend `.gitignore`
+
+**`frontend/.gitignore` dosyası oluştur:**
+```
+# Dependencies
+node_modules/
+
+# Production build
+/build
+/dist
+
+# Testing
+/coverage
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Misc
+.eslintcache
+```
+
+---
+
+## 📁 Root (Ana Klasör) `.gitignore`
+
+**Ana klasörde de bir `.gitignore` oluşturabilirsin (opsiyonel):**
+```
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

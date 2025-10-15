@@ -1,0 +1,29 @@
+# Root .gitignore for the fight-tracker repository
+
+# Ignore node modules in any subfolder
+**/node_modules/
+
+# Production/build outputs
+/build/
+/dist/
+
+# Local env files
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Misc
+.eslintcache
