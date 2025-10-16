@@ -19,7 +19,7 @@ const Homepage = ({ token, onLogout }) => {
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1 style={{ margin: 0, fontSize: '2.2rem', letterSpacing: '0.03em' }}>🥊 Fight Tracker</h1>
-            <p style={{ marginTop: 6, color: '#bdbdbd' }}>H: Hedef. Hırs. Hak Et. — Track training. Win days.</p>
+            <p style={{ marginTop: 6, color: '#bdbdbd' }}>Track training. Win days.</p>
           </div>
         </header>
 
@@ -35,9 +35,9 @@ const Homepage = ({ token, onLogout }) => {
                 letterSpacing: '-0.02em',
                 color: '#fff'
               }}>
-                FIGHTCAMP
+                FIGHT
                 <br />
-                UNLOCKED
+                TRACKING
               </h2>
               <p style={{ marginTop: 18, color: '#cfcfcf', maxWidth: 520 }}>
                 Get the full FightTracker experience — tracking, session logs. Train with intention.
@@ -59,7 +59,7 @@ const Homepage = ({ token, onLogout }) => {
 
         {/* Footer */}
         <footer style={{ marginTop: 42, color: '#9a9a9a', textAlign: 'center', fontSize: 13 }}>
-          © {new Date().getFullYear()} Fight Tracker — Built for grit.
+          © {new Date().getFullYear()} Fight Tracker
         </footer>
       </div>
     </div>
