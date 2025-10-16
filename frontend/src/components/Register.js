@@ -37,7 +37,6 @@ const Register = () => {
       }
     }
   );
-  console.log('Success:', response.data);
 
       alert(' Registration successful! Please login.');
       navigate('/login');
