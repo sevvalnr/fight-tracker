@@ -8,11 +8,23 @@ require('dotenv').config();
 const app = express();
 
 
-// --- Middleware ---
-app.use(express.json());
+// ✅ BURAYA EKLE:
+const allowedOrigins = [
+  process.env.FRONTEND_URL,   
+  'http://localhost:3000',   
+  'http://127.0.0.1:3000',
+  'http://localhost:5173',    
+  'http://127.0.0.1:5173',
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5000',
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(new Error('Not allowed by CORS'));
+  },
   credentials: true,
+  methods: ['GET','POST','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
 }));
 
 // --- Health ---

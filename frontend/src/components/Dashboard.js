@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import {
+  getFights,
+  createFight,
+  updateFight,
+  deleteFightById
+} from '../api'; // yolunu proje yapına göre ayarla: '../api' ya da './api'
 import './Dashboard.css';
-const API_BASE = 'http://localhost:5000';
 
 const Dashboard = ({ token, onLogout }) => {
   const [fights, setFights] = useState([]);
@@ -25,24 +29,22 @@ const Dashboard = ({ token, onLogout }) => {
   const user = JSON.parse(localStorage.getItem('user'));
   const fightTypes = ['Sparring', 'Competition', 'Training', 'Exhibition', 'Championship'];
 
-  const authHeader = { headers: { Authorization: `Bearer ${token}` } };
-
-    const [filterSearchType, setFilterSearchType] = useState('');
+  const [filterSearchType, setFilterSearchType] = useState('');
   const [searchText, setSearchText] = useState('');
-  const [fromDate, setFromDate] = useState('');   // yyyy-mm-dd
-  const [toDate, setToDate] = useState('');       // yyyy-mm-dd
+  const [fromDate, setFromDate] = useState(''); // yyyy-mm-dd
+  const [toDate, setToDate] = useState('');     // yyyy-mm-dd
   const [page, setPage] = useState(0);
   const pageSize = 10;
   const [total, setTotal] = useState(2);
   const totalPages = Math.ceil(total / pageSize);
 
-
   const fetchFights = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_BASE}/fights`, authHeader);
-      setFights(res.data.fights || []);
-      setFilteredFights(res.data.fights || []);
+      const data = await getFights(token);
+      setFights(data.fights || []);
+      setFilteredFights(data.fights || []);
+      setTotal(data.total ?? (data.fights?.length || 0));
     } catch (err) {
       console.error(err);
       setError('Failed to load fights');
@@ -62,11 +64,12 @@ const Dashboard = ({ token, onLogout }) => {
     e.preventDefault();
     setError('');
     try {
-      await axios.post(
-        `${API_BASE}/fights`,
-        { fight_date: fightDate, opponent_name: opponentName, fight_type: fightType, notes },
-        authHeader
-      );
+      await createFight(token, {
+        fight_date: fightDate,
+        opponent_name: opponentName,
+        fight_type: fightType,
+        notes
+      });
       setFightDate(''); setOpponentName(''); setFightType(''); setNotes(''); setShowForm(false);
       await fetchFights();
       alert('Fight log added successfully!');
@@ -75,17 +78,17 @@ const Dashboard = ({ token, onLogout }) => {
     }
   };
 
-    const toISOIfSet = (d, endOfDay = false) => {
+  const toISOIfSet = (d, endOfDay = false) => {
     if (!d) return undefined;
     const dt = new Date(d);
     if (endOfDay) { dt.setHours(23, 59, 59, 999); }
     return dt.toISOString();
   };
-    useEffect(() => {
-    searchFights();
-    }, [token, filterType, searchText, fromDate, toDate, page]);
 
-  // Filtreler değiştiğinde sayfayı sıfırla
+  useEffect(() => {
+    searchFights();
+  }, [token, filterType, searchText, fromDate, toDate, page]);
+
   useEffect(() => { setPage(0); }, [filterType, searchText, fromDate, toDate]);
 
   const searchFights = async () => {
@@ -100,9 +103,9 @@ const Dashboard = ({ token, onLogout }) => {
         limit: pageSize,
         offset: page * pageSize
       };
-      const res = await axios.get(`${API_BASE}/fights`, { ...authHeader, params });
-      setFights(res.data.fights || []);
-      setTotal(res.data.total ?? (res.data.fights?.length || 0));
+      const data = await getFights(token, params);
+      setFights(data.fights || []);
+      setTotal(data.total ?? (data.fights?.length || 0));
     } catch (err) {
       console.error(err);
       setError('Failed to load fights');
@@ -110,7 +113,6 @@ const Dashboard = ({ token, onLogout }) => {
       setLoading(false);
     }
   };
-
 
   // === PATCH ===
   const startEdit = (fight) => {
@@ -137,7 +139,7 @@ const Dashboard = ({ token, onLogout }) => {
         fight_type: editType,
         notes: editNotes
       };
-      await axios.patch(`${API_BASE}/fights/${id}`, body, authHeader);
+      await updateFight(token, id, body);
       await fetchFights();
       cancelEdit();
       alert('✅ Fight updated');
@@ -151,7 +153,7 @@ const Dashboard = ({ token, onLogout }) => {
   const deleteFight = async (id) => {
     if (!window.confirm('Bu kaydı silmek istediğine emin misin?')) return;
     try {
-      await axios.delete(`${API_BASE}/fights/${id}`, authHeader);
+      await deleteFightById(token, id);
       // Optimistic update
       setFights(prev => prev.filter(f => f.id !== id));
       setFilteredFights(prev => prev.filter(f => f.id !== id));
@@ -185,26 +187,6 @@ const Dashboard = ({ token, onLogout }) => {
             {showForm ? '❌ Cancel' : '➕ Add New Fight Log'}
           </button>
 
-{/* <div className="filters-row">
-            <div className="filter-group">
-              <label>Search (opponent/notes):</label>
-              <input
-                type="text"
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                placeholder="e.g. ali, spar..."
-              />
-              </div>
-
-            <div className="filter-group">
-              <label>From:</label>
-              <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-            </div>
-  <div className="filter-group">
-              <label>To:</label>
-              <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
-            </div>
-             </div> */}
           <div className="filter-group">
             <label>Filter by type:</label>
             <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
@@ -349,8 +331,8 @@ const Dashboard = ({ token, onLogout }) => {
               ))}
             </div>
           )}
-           {/* Pagination
-          {totalPages > 1 && (
+          {/* Pagination (hazır ama şimdilik kapalı) */}
+          {/* {totalPages > 1 && (
             <div className="pagination">
               <button
                 className="btn-secondary"
