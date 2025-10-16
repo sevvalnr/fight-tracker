@@ -7,12 +7,6 @@ require('dotenv').config();
 
 const app = express();
 
-const express = require('express');
-const cors = require('cors');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const pool = require('./db');           // db.js: module.exports = pool
-require('dotenv').config();
 
 // --- Middleware ---
 app.use(express.json());
