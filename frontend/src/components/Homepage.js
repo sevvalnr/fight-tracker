@@ -42,6 +42,11 @@ const Homepage = ({ token, onLogout }) => {
               <p style={{ marginTop: 18, color: '#cfcfcf', maxWidth: 520 }}>
                 Get the full FightTracker experience — tracking, session logs. Train with intention.
               </p>
+
+              <div style={{ marginTop: 22 }}>
+                <Link to="/dashboard" className="btn-primary" style={{ marginRight: 12 }}>Get Started</Link>
+                {!token && <Link to="/login" className="btn-primary">Login</Link>}
+              </div>
             </section>
 
             <section style={{ height: 420, borderRadius: 10, overflow: 'hidden', boxShadow: '0 6px 30px rgba(0,0,0,0.6)' }}>
