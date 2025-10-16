@@ -28,7 +28,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await axios.post('https://fight-tracker-backend.onrender.com/register'||'http://localhost:5000/register', {
+      await axios.post(`${process.env.REACT_APP_API_URL}/register`||'http://localhost:5000/register', {
         email,
         password,
       });
