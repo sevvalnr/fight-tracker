@@ -1,11 +1,14 @@
 const express = require('express');
 const cors = require('cors');
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pool = require('./db');
 require('dotenv').config();
 
-const app = express();
+
 
 
 // ✅ BURAYA EKLE:
