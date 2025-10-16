@@ -40,19 +40,11 @@ const Homepage = ({ token, onLogout }) => {
                 UNLOCKED
               </h2>
               <p style={{ marginTop: 18, color: '#cfcfcf', maxWidth: 520 }}>
-                Get the full FightTracker experience — punch tracking, session logs, and the
-                tools to push past plateaus. Train with intention.
+                Get the full FightTracker experience — tracking, session logs. Train with intention.
               </p>
-
-              <div style={{ marginTop: 22 }}>
-                <Link to="/dashboard" className="btn-primary" style={{ marginRight: 12 }}>Get Started</Link>
-                {!token && <Link to="/login" className="btn-primary">Login</Link>}
-              </div>
             </section>
 
-            {/* Right: image panel (keeps visual focus) */}
             <section style={{ height: 420, borderRadius: 10, overflow: 'hidden', boxShadow: '0 6px 30px rgba(0,0,0,0.6)' }}>
-              {/* Replace the backgroundImage URL below with your app's hero image if available */}
               <div style={{
                 width: '100%',
                 height: '100%',
