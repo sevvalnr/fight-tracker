@@ -17,7 +17,7 @@ const Login = ({ setToken }) => {
 
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/register`||'http://localhost:5000/register', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`||'http://localhost:5000/login', {
         email,
         password,
          },   {
