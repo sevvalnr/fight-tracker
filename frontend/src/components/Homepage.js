@@ -5,45 +5,82 @@ const Homepage = ({ token, onLogout }) => {
   const user = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || 'null') : null;
   const navigate = useNavigate();
 
-  const handleProfile = () => {
-    navigate('/dashboard');
-  };
+  const handleProfile = () => navigate('/dashboard');
 
   return (
-    <div style={{ padding: '2rem', maxWidth: 900, margin: '0 auto' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h1 style={{ margin: 0 }}>🥊 Fight Tracker</h1>
-          <p style={{ marginTop: 4, color: '#666' }}>Track fights, training sessions and progress.</p>
-        </div>
-        <div>
-          {!token ? (
-            <Link to="/login" className="btn-primary">Login</Link>
-          ) : (
-            <>
-              <button onClick={handleProfile} className="btn-secondary" style={{ marginRight: 8 }}>
-                {user?.name ? `Profile (${user.name})` : 'Profile'}
-              </button>
-              <button onClick={onLogout} className="btn-danger">Logout</button>
-            </>
-          )}
-        </div>
-      </header>
-
-      <main style={{ marginTop: 24 }}>
-        <section style={{ background: '#fafafa', padding: 20, borderRadius: 8 }}>
-          <h2>Welcome{user?.name ? `, ${user.name}` : ''}!</h2>
-          <p>
-            This is the Fight Tracker app — a lightweight tool to log training, record sparring and
-            view your progress over time. Use the Login button to sign in, or register a new account.
-          </p>
-          <div style={{ marginTop: 12 }}>
-            <Link to="/register" className="btn-outline">Create an account</Link>
+    <div style={{
+      background: 'linear-gradient(180deg,#111013 0%, #1a1a1f 100%)',
+      color: '#eee',
+      minHeight: '100vh',
+      padding: '3rem 1rem'
+    }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        {/* Hero */}
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '2.2rem', letterSpacing: '0.03em' }}>🥊 Fight Tracker</h1>
+            <p style={{ marginTop: 6, color: '#bdbdbd' }}>H: Hedef. Hırs. Hak Et. — Track training. Win days.</p>
           </div>
-        </section>
-      </main>
+        </header>
+
+        {/* Main Hero (stacked headline left, large image right) */}
+        <main style={{ marginTop: 28 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'center' }}>
+            {/* Left: large stacked headline and CTA */}
+            <section style={{ padding: '2rem 1rem' }}>
+              <h2 style={{
+                margin: 0,
+                fontSize: '4rem',
+                lineHeight: 0.9,
+                letterSpacing: '-0.02em',
+                color: '#fff'
+              }}>
+                FIGHTCAMP
+                <br />
+                UNLOCKED
+              </h2>
+              <p style={{ marginTop: 18, color: '#cfcfcf', maxWidth: 520 }}>
+                Get the full FightTracker experience — punch tracking, session logs, and the
+                tools to push past plateaus. Train with intention.
+              </p>
+
+              <div style={{ marginTop: 22 }}>
+                <Link to="/dashboard" className="btn-primary" style={{ marginRight: 12 }}>Get Started</Link>
+                {!token && <Link to="/login" className="btn-primary">Login</Link>}
+              </div>
+            </section>
+
+            {/* Right: image panel (keeps visual focus) */}
+            <section style={{ height: 420, borderRadius: 10, overflow: 'hidden', boxShadow: '0 6px 30px rgba(0,0,0,0.6)' }}>
+              {/* Replace the backgroundImage URL below with your app's hero image if available */}
+              <div style={{
+                width: '100%',
+                height: '100%',
+                backgroundImage: "url('/public/hero-boxing.jpg')",
+                backgroundPosition: 'center right',
+                backgroundSize: 'cover',
+                backgroundColor: '#000'
+              }} />
+            </section>
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer style={{ marginTop: 42, color: '#9a9a9a', textAlign: 'center', fontSize: 13 }}>
+          © {new Date().getFullYear()} Fight Tracker — Built for grit.
+        </footer>
+      </div>
     </div>
   );
 };
+
+function StatCard({ label, value }) {
+  return (
+    <div style={{ flex: 1, background: 'rgba(255,255,255,0.02)', padding: 14, borderRadius: 8, border: '1px solid rgba(255,255,255,0.03)' }}>
+      <div style={{ fontSize: 18, fontWeight: '700' }}>{value}</div>
+      <div style={{ fontSize: 12, color: '#bdbdbd', marginTop: 4 }}>{label}</div>
+    </div>
+  );
+}
 
 export default Homepage;

@@ -11,7 +11,6 @@ require('dotenv').config();
 
 
 
-// ✅ BURAYA EKLE:
 const allowedOrigins = [
   process.env.FRONTEND_URL,   
   'http://localhost:3000',   

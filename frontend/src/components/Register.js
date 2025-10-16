@@ -38,7 +38,6 @@ const Register = () => {
     }
   );
 
-      alert(' Registration successful! Please login.');
       navigate('/login');
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed');

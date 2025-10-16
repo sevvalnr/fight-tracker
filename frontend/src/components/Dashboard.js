@@ -184,7 +184,7 @@ const Dashboard = ({ token, onLogout }) => {
       <main className="dashboard-main">
         <div className="dashboard-controls">
           <button onClick={() => setShowForm(!showForm)} className="btn-add">
-            {showForm ? '❌ Cancel' : '➕ Add New Fight Log'}
+            {showForm ? '❌ Cancel' : '➕ Add New Fight'}
           </button>
 
           <div className="filter-group">
@@ -245,19 +245,19 @@ const Dashboard = ({ token, onLogout }) => {
               </div>
 
               {error && <div className="error-message">⚠️ {error}</div>}
-              <button type="submit" className="btn-submit">💾 Save Fight Log</button>
+              <button type="submit" className="btn-submit"> Save Fight Log</button>
             </form>
           </div>
         )}
 
         {/* Fights List */}
         <div className="fights-section">
-          <h3>📋 Your Fight Logs ({filteredFights.length})</h3>
+          <h3> Your Fights ({filteredFights.length})</h3>
 
           {loading ? (
             <div className="loading">Loading...</div>
           ) : filteredFights.length === 0 ? (
-            <div className="empty-state"><p>📭 No fight logs yet. Add your first one!</p></div>
+            <div className="empty-state"><p>📭 No fight yet. Add your first one!</p></div>
           ) : (
             <div className="fights-grid">
               {filteredFights.map((fight) => (
