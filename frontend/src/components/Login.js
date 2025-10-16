@@ -17,10 +17,15 @@ const Login = ({ setToken }) => {
 
 
     try {
-      const response = await axios.post('https://fight-tracker-backend.onrender.com'|| 'http://localhost:3000', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/register`||'http://localhost:5000/register', {
         email,
         password,
-      });
+         },   {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }
+  );
 
       setToken(response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
